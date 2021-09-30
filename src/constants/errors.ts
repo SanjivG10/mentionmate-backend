@@ -11,5 +11,5 @@ export enum Errors {
 	SEARCH_PARAM_REQUIRED = "Search key is required",
 	SAME_USER = "Cannot do this operation to same user",
 	INVALID_REQUEST = "Invalid request",
-	NOT_ALL_USERS_PRESENT = "Not all users are present"
+	NOT_ALL_USERS_PRESENT = "Not all users exists or not all users have accpeted your requests"
 }

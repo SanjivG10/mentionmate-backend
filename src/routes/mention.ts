@@ -5,6 +5,7 @@ import { auth } from "../middleware/auth";
 import Mention, { MentionStatus } from "../db/models/mention";
 import { checkEveryElementString } from "../utils/user";
 import UserModel from "../db/models/user";
+import RequestModel, { RequestStatus } from "../db/models/request";
 
 const router = express.Router();
 
@@ -24,13 +25,28 @@ router.post("/", auth, async (req: Request, res: Response) => {
 			});
 		}
 
+		if (to.length > 5) {
+			return res.status(400).send({
+				error: Errors.INVALID_REQUEST
+			});
+		}
+
 		const mentionedUsersLength = await UserModel.countDocuments({
 			username: {
 				$in: to
-			}
+			},
 		});
 
-		if (mentionedUsersLength !== to.length) {
+
+		const currentUserRequestedAcceptedUsersLength = await RequestModel.countDocuments({
+			from: req.username,
+			to: {
+				$in: to
+			},
+			status: RequestStatus.ACCEPTED,
+		});
+
+		if (mentionedUsersLength !== to.length || currentUserRequestedAcceptedUsersLength !== to.length) {
 			return res.status(400).send({
 				error: Errors.NOT_ALL_USERS_PRESENT
 			});

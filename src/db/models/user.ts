@@ -28,7 +28,6 @@ userSchema.set("toJSON", {
 
 userSchema.plugin(mongoosePaginate);
 
-// @ts-expect-error: for paginate
 
 export interface IUserModel<T extends Document> extends PaginateModel<T> { }
 const UserModel: IUserModel<IUser> = model<IUser>('User', userSchema) as IUserModel<IUser>;
