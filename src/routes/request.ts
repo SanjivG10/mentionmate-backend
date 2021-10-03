@@ -15,7 +15,7 @@ router.post("/", auth, async (req: Request, res: Response) => {
 
 		if (!to) {
 			return res.status(400).send({
-				error: Errors.FOUR_O_FOUR_ERROR
+				error: Errors.INVALID_REQUEST
 			})
 		}
 
@@ -41,7 +41,7 @@ router.post("/", auth, async (req: Request, res: Response) => {
 
 		const prevRequest = await RequestModel.findOne({
 			from: req.username,
-			to
+			to,
 		});
 
 		if (prevRequest) {
@@ -49,7 +49,6 @@ router.post("/", auth, async (req: Request, res: Response) => {
 				error: Errors.ALREADY_EXISTS
 			})
 		}
-
 		const newRequest = new RequestModel({
 			from: req.username,
 			to,
@@ -99,6 +98,7 @@ router.put("/:id", auth, async (req: Request, res: Response) => {
 					error: ""
 				})
 			}
+			console.log("HERE");
 
 			return res.status(400).send({
 				error: Errors.INVALID_REQUEST

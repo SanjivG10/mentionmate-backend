@@ -3,6 +3,7 @@ import { isPasswordSame, generateHash, generateToken } from "../utils/user";
 import User from "../db/models/user";
 import { Errors } from "../constants/errors";
 import { auth } from "../middleware/auth";
+import RequestModel from "../db/models/request";
 
 const router = express.Router();
 
@@ -10,6 +11,18 @@ const router = express.Router();
 router.post("/", async (req: Request, res: Response) => {
 	try {
 		const { username, password } = req.body;
+		if (username && username.length < 3 || !password) {
+			return res.status(400).send({
+				error: Errors.INVALID_REQUEST
+			})
+		}
+		const existingUser = await User.findOne({ username });
+		if (existingUser) {
+			return res.status(403).send({
+				error: Errors.USER_EXISTS
+			})
+		}
+
 		const hashedPassword = await generateHash(password);
 		const newUser = new User({
 			username,
@@ -87,9 +100,24 @@ router.get("/", auth, async (req: Request, res: Response) => {
 		}
 			, options);
 
+		const usernames = users.docs.map((user) => user.username);
+
+		const requestsForGivenUsers = await RequestModel.find({
+			to: {
+				$in: usernames
+			}
+		});
+
+
+		const userDocsAgain = users.docs.map((eachUser) => {
+			const requestForCurrentUser = requestsForGivenUsers.find((request) => request.to === eachUser.username);
+			return { ...eachUser.toJSON(), status: requestForCurrentUser?.status || null }
+		});
+
+
 		return res.send({
 			error: "",
-			data: users
+			data: { ...users, docs: userDocsAgain }
 		})
 	}
 

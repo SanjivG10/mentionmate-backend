@@ -130,7 +130,7 @@ router.get("/", auth, async (req: Request, res: Response) => {
 		const { page = 1 } = req.query;
 		const options = {
 			page: typeof page === "string" ? parseInt(page) : 1,
-			limit: 7
+			limit: 5
 		}
 
 		const currentUserMentions = await Mention.paginate({

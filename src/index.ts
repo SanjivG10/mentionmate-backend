@@ -1,11 +1,14 @@
 import dotenv from "dotenv";
 
 dotenv.config()
-import express, { Request, Response, Application, Express } from "express";
+import express, { Request, Response, Application } from "express";
 import initializeDb from "./db";
 import userRouter from "./routes/user"
 import mentionRouter from "./routes/mention"
 import requestRouter from "./routes/request"
+import cors from "cors";
+import bodyParser from "body-parser";
+
 
 const app: Application = express();
 const PORT = process.env.PORT || 8000;
@@ -19,7 +22,8 @@ declare global {
 	}
 }
 
-app.use(express.json());
+app.use(cors())
+app.use(express.json())
 app.use("/user", userRouter);
 app.use("/mention", mentionRouter);
 app.use("/request", requestRouter);
