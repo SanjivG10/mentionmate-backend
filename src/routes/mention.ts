@@ -130,7 +130,10 @@ router.get("/", auth, async (req: Request, res: Response) => {
 		const { page = 1 } = req.query;
 		const options = {
 			page: typeof page === "string" ? parseInt(page) : 1,
-			limit: 5
+			limit: 5,
+			sort: {
+				_id: -1
+			}
 		}
 
 		const currentUserMentions = await Mention.paginate({
@@ -139,7 +142,7 @@ router.get("/", auth, async (req: Request, res: Response) => {
 					user: req.username,
 					status: MentionStatus.UNSEEN
 				}
-			}
+			},
 		}, options);
 
 
