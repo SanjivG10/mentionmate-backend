@@ -6,6 +6,8 @@ import Mention, { MentionStatus } from "../db/models/mention";
 import { checkEveryElementString } from "../utils/user";
 import UserModel from "../db/models/user";
 import RequestModel, { RequestStatus } from "../db/models/request";
+import { io } from "../";
+import { getActiveSocketUserNameWithSocketIds } from "../utils/socket";
 
 const router = express.Router();
 
@@ -62,6 +64,18 @@ router.post("/", auth, async (req: Request, res: Response) => {
 		});
 
 		const mention = await newMention.save()
+
+		const usernamesWithSocketIds = getActiveSocketUserNameWithSocketIds(io);
+		for (const mentioningUsername of to) {
+			const activeSocketIds = usernamesWithSocketIds[mentioningUsername];
+			if (activeSocketIds) {
+				activeSocketIds.forEach((socketId) => {
+					const socket = io.sockets.sockets.get(socketId);
+					socket?.emit("notification", newMention);
+				});
+			}
+		}
+
 
 		return res.send({
 

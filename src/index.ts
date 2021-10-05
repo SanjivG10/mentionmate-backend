@@ -7,7 +7,11 @@ import userRouter from "./routes/user"
 import mentionRouter from "./routes/mention"
 import requestRouter from "./routes/request"
 import cors from "cors";
-import bodyParser from "body-parser";
+import { Server } from "socket.io";
+import { getUsernamefromSocket } from "./utils/user";
+import { getActiveSocketUserNameWithSocketIds } from "./utils/socket";
+
+
 
 
 const app: Application = express();
@@ -21,6 +25,7 @@ declare global {
 		}
 	}
 }
+
 
 app.use(cors())
 app.use(express.json())
@@ -36,7 +41,27 @@ app.get("/", (req: Request, res: Response): Response => {
 	})
 });
 
-app.listen(PORT, async () => {
+const server = app.listen(PORT, async () => {
 	console.log(`started listening on port ${PORT}`);
 	await initializeDb();
 })
+
+
+export const io = new Server(server, {
+	cors: {
+		origin: '*',
+	}
+});
+
+
+
+io.on("connection", async (socket) => {
+	const { token } = socket.handshake.query;
+	let username = "";
+	if (typeof token === "string") {
+		username = await getUsernamefromSocket(token);
+	}
+	if (username) {
+		socket.data.username = username;
+	}
+});
