@@ -1,5 +1,6 @@
 
 import mongoose, { Schema, model, SchemaDefinitionProperty, PaginateModel, Document } from 'mongoose';
+import moment from "moment";
 
 import mongoosePaginate from "mongoose-paginate-v2"
 
@@ -15,7 +16,7 @@ export interface IUserMention extends Document {
 		status: MentionStatus
 	}[];
 	text: string,
-	date: Date,
+	date: number,
 	link: string,
 }
 
@@ -40,16 +41,18 @@ const mentionSchema = new Schema<IUserMention>({
 		type: String,
 		required: true,
 		trim: true,
+		maxlength: 250,
 	},
 	link: {
 		type: String,
 		required: true,
 		trim: true,
+		maxLength: 500,
 	},
 	date: {
-		type: Date,
+		type: Number,
 		required: true,
-		default: new Date()
+		default: moment.now()
 	}
 });
 

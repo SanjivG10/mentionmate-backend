@@ -8,6 +8,7 @@ export enum Errors {
 	FOUR_O_FOUR_ERROR = "Data not found",
 	ALREADY_EXISTS = "Entry already exists",
 	ENOUGH_PENDING_REQUESTS = "User already has enough pending requests",
+	ENOUGH_FRIENDS = "You already have enough mates",
 	SEARCH_PARAM_REQUIRED = "Search key is required",
 	SAME_USER = "Cannot do this operation to same user",
 	INVALID_REQUEST = "Invalid request",

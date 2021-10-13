@@ -8,6 +8,7 @@ import UserModel from "../db/models/user";
 import RequestModel, { RequestStatus } from "../db/models/request";
 import { io } from "../";
 import { getActiveSocketUserNameWithSocketIds } from "../utils/socket";
+import moment from "moment";
 
 const router = express.Router();
 
@@ -21,7 +22,7 @@ router.post("/", auth, async (req: Request, res: Response) => {
 			});
 		}
 
-		if (!checkEveryElementString(to)) {
+		if (!checkEveryElementString(to) || text.length > 250 || link.length > 500) {
 			return res.status(400).send({
 				error: Errors.INVALID_REQUEST
 			});
@@ -61,6 +62,7 @@ router.post("/", auth, async (req: Request, res: Response) => {
 			to: toUsers.map((user) => { return { user } }),
 			text,
 			link,
+			date: moment.now()
 		});
 
 		const mention = await newMention.save()
@@ -71,7 +73,8 @@ router.post("/", auth, async (req: Request, res: Response) => {
 			if (activeSocketIds) {
 				activeSocketIds.forEach((socketId) => {
 					const socket = io.sockets.sockets.get(socketId);
-					socket?.emit("notification", newMention);
+					socket?.emit("mention", newMention);
+					console.log("MENTIONING ", mentioningUsername);
 				});
 			}
 		}
@@ -144,7 +147,7 @@ router.get("/", auth, async (req: Request, res: Response) => {
 		const { page = 1 } = req.query;
 		const options = {
 			page: typeof page === "string" ? parseInt(page) : 1,
-			limit: 5,
+			limit: 2,
 			sort: {
 				_id: -1
 			}

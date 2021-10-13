@@ -8,6 +8,7 @@ import { ITokenPayload } from "../utils/user";
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
 	const token = req.headers["x-access-token"] as string;
 
+
 	if (!token) {
 		return res.status(403).send(Errors.TOKEN_REQUIRED);
 	}
@@ -19,6 +20,5 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
 	} catch {
 		return res.status(401).send(Errors.INVALID_TOKEN);
 	}
-
 	return next();
 };

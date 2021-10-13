@@ -9,7 +9,6 @@ import requestRouter from "./routes/request"
 import cors from "cors";
 import { Server } from "socket.io";
 import { getUsernamefromSocket } from "./utils/user";
-import { getActiveSocketUserNameWithSocketIds } from "./utils/socket";
 
 
 
