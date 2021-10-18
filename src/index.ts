@@ -23,7 +23,7 @@ declare global {
 }
 
 
-app.use(cors())
+app.use(cors({ origin: '*' }));
 app.use(express.json())
 app.use("/mentionmate/user", userRouter);
 app.use("/mentionmate/mention", mentionRouter);
