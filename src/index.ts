@@ -11,7 +11,7 @@ import { Server } from "socket.io";
 import { getUsernamefromSocket } from "./utils/user";
 
 const app: Application = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 9999;
 
 declare global {
 	// eslint-disable-next-line @typescript-eslint/no-namespace
