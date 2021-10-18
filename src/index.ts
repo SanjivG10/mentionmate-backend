@@ -45,8 +45,9 @@ const server = app.listen(PORT, async () => {
 
 export const io = new Server(server, {
 	cors: {
-		origin: true,
-	}
+		'methods': ['GET', 'PATCH', 'POST', 'PUT'],
+		'origin': "*"
+	},
 });
 
 
