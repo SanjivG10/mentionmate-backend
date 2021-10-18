@@ -10,9 +10,6 @@ import cors from "cors";
 import { Server } from "socket.io";
 import { getUsernamefromSocket } from "./utils/user";
 
-
-
-
 const app: Application = express();
 const PORT = process.env.PORT || 8000;
 
@@ -28,12 +25,12 @@ declare global {
 
 app.use(cors())
 app.use(express.json())
-app.use("/user", userRouter);
-app.use("/mention", mentionRouter);
-app.use("/request", requestRouter);
+app.use("/mentionmate/user", userRouter);
+app.use("/mentionmate/mention", mentionRouter);
+app.use("/mentionmate/request", requestRouter);
 
 
-app.get("/", (req: Request, res: Response): Response => {
+app.get("/mentionmate", (req: Request, res: Response): Response => {
 
 	return res.send({
 		msgs: "server started running"

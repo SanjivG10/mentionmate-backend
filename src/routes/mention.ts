@@ -74,7 +74,6 @@ router.post("/", auth, async (req: Request, res: Response) => {
 				activeSocketIds.forEach((socketId) => {
 					const socket = io.sockets.sockets.get(socketId);
 					socket?.emit("mention", newMention);
-					console.log("MENTIONING ", mentioningUsername);
 				});
 			}
 		}
