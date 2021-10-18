@@ -48,6 +48,7 @@ export const io = new Server(server, {
 		'methods': ['GET', 'PATCH', 'POST', 'PUT'],
 		'origin': "*"
 	},
+	path: "/mentionmate/socket.io"
 });
 
 
