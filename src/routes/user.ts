@@ -103,8 +103,9 @@ router.get("/", auth, async (req: Request, res: Response) => {
 		const usernames = users.docs.map((user) => user.username);
 
 		const requestsForGivenUsers = await RequestModel.find({
+			from: req.username,
 			to: {
-				$in: usernames
+				$in: usernames,
 			}
 		});
 
